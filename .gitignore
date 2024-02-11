@@ -1,0 +1,4 @@
+minmaxscaler.pkl
+model.pkl
+standscaler.pkl
+plant_disease_model_1_latest.pt
