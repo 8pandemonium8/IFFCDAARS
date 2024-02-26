@@ -125,8 +125,31 @@
             margin-bottom: 0;
         }
         .logout{
-            padding-left:70vw;
+            padding-left:50vw;
         }
+        .button-grow {
+            /* style="background-color: #228B22; border-color: #196419; transition: 2ms;" */
+          color: white;
+          font-size: large;
+          background-color: #228B22;
+          border: 1px solid #075004;
+          border-radius: 4px;
+          padding: 10px 30px 10px 30px;
+          cursor: pointer;
+          transition: all 0.3s ease-in-out;
+          margin-left: 32px;
+        }
+        
+        .button-grow:hover {
+            background-color: white;
+            color: #228B22;
+          transform: scale(1.1);
+        }
+        #login-form-container{
+            padding-top: 20vh;
+            padding-left: 35vw;
+        }
+
     </style>
 </head>
 
@@ -139,28 +162,46 @@
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav">
                 <li class="navbar-brand active">
-                    <a class="nav-link" id = "link1" href="/home" >Home</a>
+                    <a class="nav-link" id = "link1" href="/" >Intelligent Framework for Crop Data Analytics and Crop Recommender System</a>
                 </li>
-                <li class="navbar-brand active">
-                    <a class="nav-link" id = "link2" href="/index" >CDD</a>
-                </li>
-                <li class="navbar-brand active">
-                    <a class="nav-link" id = "link3" href="/index2" >CRS</a>
-                </li>
-                <li class="navbar-brand">
-                    <a class="nav-link" id = "link4" href="/market" >Supplements</a>
-                </li>
-                <!-- <li class="navbar-brand">
-                    <a class="nav-link" href="/contact" >Contact-Us</a>
-                </li> -->
-            </ul>
-            <ul class = "navbar-nav">
-                <li class="navbar-brand active logout">
-                    <a class="nav-link" href="/logout" style="color: white;">LOGOUT</a>
-                </li>
+                
             </ul>
         </div>
     </nav>
+    <div id = "login-form-container">
+        <form method="post" action="/register">
+    
+            <div class="col-md-4" >
+                <input type="text" placeholder="Username" name="username" class="form-control" style="height: 50px; width: 500px;" required />
+            </div>
+            <br>
+
+            <div class="col-md-4">
+                <input type="password" placeholder="Password" name="password" class="form-control" style="height: 50px; width: 500px;" required />
+            </div>
+            <br>
+            
+            <div class="col-md-4" >
+                <input type="text" placeholder="Fullname" name="fullname" class="form-control" style="height: 50px; width: 500px;" required />
+            </div>
+            <br>
+    
+            <div class="col-md-4" >
+                <input type="text" placeholder="Email" name="email" class="form-control" style="height: 50px; width: 500px;" required />
+            </div>
+            <br>
+    
+    
+            <div class="col-md-4" >
+                <input type="number" step="1" placeholder="Age" name="age" class="form-control" style="height: 50px; width: 500px;" />
+            </div>
+            <br>
+    
+            <div class="col-md-4" style="padding-left: 150px;">
+                <input type="submit" class="button-grow"  action = "/register" name = "register" id = "register" value = "Register"/>
+            </div>
+        </form>
+    </div>
     <style>
         #link1, #link2, #link3, #link4 {
             font-size: x-large;
@@ -200,3 +241,5 @@
     }
 </script> -->
 </html>
+
+
