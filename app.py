@@ -9,7 +9,7 @@ import pandas as pd
 import sklearn
 import pickle
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager, login_required, login_user, logout_user, UserMixin 
+from flask_login import LoginManager, login_required, login_user, logout_user, UserMixin, current_user
 from flask_wtf import FlaskForm
 
 disease_info = pd.read_csv('disease_info.csv' , encoding='cp1252')
@@ -22,6 +22,9 @@ model_0.eval()
 model_1 = pickle.load(open('model.pkl','rb'))
 sc = pickle.load(open('standscaler.pkl','rb'))
 ms = pickle.load(open('minmaxscaler.pkl','rb'))
+
+
+
 
 def prediction(image_path):
     image = Image.open(image_path)
@@ -38,6 +41,7 @@ app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = 'sqlite:///finalfinal.db'
 app.config["SECRET_KEY"] = "thisisasecretkey"
 db = SQLAlchemy(app)
+
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -60,6 +64,18 @@ class UserLoginData(db.Model,UserMixin):
     password = db.Column(db.String(200), nullable = False)
     age = db.Column(db.Integer,nullable = True)
     
+class UserCRSHistory(db.Model):
+    __tablename__ = "user_crs_history_final"
+    id = db.Column(db.Integer ,primary_key = True,nullable = False)
+    user_id = db.Column(db.Integer ,nullable = False)
+    N = db.Column(db.Float,nullable = False)
+    P = db.Column(db.Float,nullable = False)
+    K = db.Column(db.Float,nullable = False)
+    temp = db.Column(db.Float,nullable = False)
+    humidity = db.Column(db.Float,nullable = False)
+    ph = db.Column(db.Float,nullable = False)
+    rainfall = db.Column(db.Float,nullable = False)
+    prediction = db.Column(db.String(200), nullable = False)
 
 with app.app_context():
     db.create_all()
@@ -80,6 +96,7 @@ def login_page():
         
         if user:
             if user.password == password_input:
+
                 login_user(user)
                 return redirect('/home')
 
@@ -113,14 +130,6 @@ def register_page():
 def home_page():
     return render_template('home.html')
 
-        
-#start checking here
-@app.route('/contact')
-@login_required
-def contact():
-    return render_template("contact-us.html")
-
-
 @app.route('/index')
 @login_required
 def ai_engine_page():
@@ -136,18 +145,18 @@ def index2():
 def mobile_device_detected_page():
     return render_template('mobile-device.html')
 
-@app.route('/predict')
+@app.route('/predict', methods = ["POST","GET"])
 @login_required
 def predict():
-    N = request.form['Nitrogen']
-    P = request.form['Phosporus']
-    K = request.form['Potassium']
-    temp = request.form['Temperature']
-    humidity = request.form['Humidity']
-    ph = request.form['Ph']
-    rainfall = request.form['Rainfall']
-
-    feature_list = [N, P, K, temp, humidity, ph, rainfall]
+    N_input = request.form['Nitrogen']
+    P_input = request.form['Phosporus']
+    K_input= request.form['Potassium']
+    temp_input = request.form['Temperature']
+    humidity_input = request.form['Humidity']
+    ph_input = request.form['Ph']
+    rainfall_input = request.form['Rainfall']
+    user_id_input = current_user.id
+    feature_list = [N_input, P_input, K_input, temp_input, humidity_input, ph_input, rainfall_input]
     single_pred = np.array(feature_list).reshape(1, -1)
 
     scaled_features = ms.transform(single_pred)
@@ -162,6 +171,9 @@ def predict():
     if prediction[0] in crop_dict:
         crop = crop_dict[prediction[0]]
         result = "{} is the best crop to be cultivated right there".format(crop)
+        new_entry = UserCRSHistory( user_id = user_id_input,N = N_input,K = K_input,P = P_input,temp = temp_input ,humidity = humidity_input ,ph =  ph_input , rainfall = rainfall_input,prediction = crop)
+        db.session.add(new_entry)
+        db.session.commit()
     else:
         result = "Sorry, we could not determine the best crop to be cultivated with the provided data."
     return render_template('index2.html',result = result)
@@ -191,6 +203,32 @@ def submit():
 def market():
     return render_template('market.html', supplement_image = list(supplement_info['supplement image']),
                            supplement_name = list(supplement_info['supplement name']), disease = list(disease_info['disease_name']), buy = list(supplement_info['buy link']))
+
+
+@app.route('/profile',methods = ['GET','POST'])
+@login_required
+def profile():
+    if current_user.is_authenticated:
+        # User is logged in, access details
+        details = {
+            'username': current_user.username,
+            'userid' : current_user.id,
+            'fullname' : current_user.fullname,
+            'age' : current_user.age
+            
+        }
+    
+        history = UserCRSHistory.query.filter_by(user_id = current_user.id).order_by(UserCRSHistory.id.desc())
+        print(history)
+        return render_template('profile.html', details = details,history = history)
+    else:
+        # User is not logged in, handle accordingly
+        return {'message': 'You are not logged in.'}
+
+# @app.route('/current_user',methods=['GET','POST'])
+# @login_required
+# def current_user():
+#     return load_user(current_user_id).username
 
 if __name__ == '__main__':
     app.run(debug=True)

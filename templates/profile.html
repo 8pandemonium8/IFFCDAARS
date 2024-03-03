@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+{% block pagetitle %}
+Profile
+{% endblock pagetitle %}
+
+
+{% block body %}
+<style>
+    .profile-container {
+        display: flex;
+        flex-direction: column;
+        border: 5px solid green;
+        width: 400px;
+        margin: 32px;
+        padding: 32px;
+        border-radius: 8px;
+        height: 300px;
+    }
+
+    .label-container {
+        width: 128px;
+        text-align: center;
+    }
+
+    .recon-container {
+        border: 5px solid green;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 650px;
+        margin: 32px;
+        padding: 32px;
+        border-radius: 8px;
+        overflow-y: auto;
+        height:800px;
+    }
+
+    .recon-heading{
+        text-align: center;
+    }
+
+    .label-recon-container {
+        width: 98px;
+        text-align: center;
+    }
+
+    .main-container {
+        display: flex;
+        flex-direction: row;
+    }
+    .prediction-container{
+        border: 3px solid white;
+        background-color: white;
+        width: 500px;
+        margin: 16px;
+        padding: 16px;
+        border-radius: 8px;
+    }
+
+    #prediction-label{
+        background-color:#d62b37;
+    }
+</style>
+
+<div class="main-container">
+
+    <div class="profile-container">
+        <form>
+            <h2>login deets</h2>
+            <label class="label-container"> Username </label> <input style="pointer-events: none;" type="text" readonly
+                placeholder="{{ details.username }}" /> <br>
+            <label class="label-container"> Userid</label> <input type="text" readonly
+                placeholder="{{ details.userid  }}" /> <br>
+            <label class="label-container"> Full Name </label> <input type="text"
+                placeholder="{{ details.fullname }}" /> <br>
+            <!-- <p>{{ details[3] }}</p> -->
+        </form>
+    </div>
+    <div class="recon-container">
+        <h1 class="recon-heading">Most previous recommendation</h1>
+        {% for prediction_iterable in history %}
+        <div class =  "prediction-container">
+            <label class="label-recon-container"> N </label> <input type="text" readonly
+            placeholder="{{ prediction_iterable.N }}" /> <br>
+        <label class="label-recon-container"> P</label> <input type="text" readonly
+            placeholder="{{ prediction_iterable.P  }}" /> <br>
+        <label class="label-recon-container"> K </label> <input type="text" placeholder="{{ prediction_iterable.K }}" />
+        <br>
+        <label class="label-recon-container"> temp </label> <input type="text" readonly
+            placeholder="{{ prediction_iterable.temp }}" /> <br>
+        <label class="label-recon-container"> ph</label> <input type="text" readonly
+            placeholder="{{ prediction_iterable.ph }}" /> <br>
+        <label class="label-recon-container"> humidity </label> <input type="text"
+            placeholder="{{ prediction_iterable.humidity }}" /> <br>
+        <label class="label-recon-container"> rainfall</label> <input type="text" readonly
+            placeholder="{{ prediction_iterable.rainfall }}" /> <br>
+        <label class="label-recon-container" id = "prediction-label"> prediction </label> <input type="text"
+            placeholder="{{ prediction_iterable.prediction }}" /> <br>
+        </div>
+        {% endfor %}
+    </div>
+
+</div>
+
+
+{% endblock body %}
+
+
+<!-- <label class="label-recon-container"> N </label> <input type="text" readonly placeholder="{{ history[0].N }}"/> <br>
+<label class="label-recon-container"> P</label> <input type="text" readonly placeholder="{{ history[0].P  }}"/> <br>
+<label class="label-recon-container"> K  </label> <input type="text"  placeholder="{{ history[0].K }}"/> <br>
+<label class="label-recon-container"> temp </label> <input type="text" readonly placeholder="{{ history[0].temp }}"/> <br>
+<label class="label-recon-container"> ph</label> <input type="text" readonly placeholder="{{ history[0].ph }}"/> <br>
+<label class="label-recon-container"> humidity  </label> <input type="text"  placeholder="{{ history[0].humidity }}"/> <br>
+<label class="label-recon-container"> rainfall</label> <input type="text" readonly placeholder="{{ history[0].rainfall }}"/> <br>
+<label class="label-recon-container"> prediction  </label> <input type="text"  placeholder="{{ history[0].prediction }}"/> <br> -->

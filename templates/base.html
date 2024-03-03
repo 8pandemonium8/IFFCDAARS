@@ -124,8 +124,11 @@
             color: #aaa;
             margin-bottom: 0;
         }
-        .logout{
-            padding-left:70vw;
+
+        .top-bar{
+            display:flex;
+            flex-direction:row;
+            justify-content:space-between;
         }
     </style>
 </head>
@@ -136,8 +139,8 @@
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button> -->
-        <div class="collapse navbar-collapse" id="navbarNavDropdown">
-            <ul class="navbar-nav">
+        <div class="collapse navbar-collapse top-bar" id="navbarNavDropdown">
+            <ul class="navbar-nav ">
                 <li class="navbar-brand active">
                     <a class="nav-link" id = "link1" href="/home" >Home</a>
                 </li>
@@ -154,8 +157,11 @@
                     <a class="nav-link" href="/contact" >Contact-Us</a>
                 </li> -->
             </ul>
-            <ul class = "navbar-nav">
-                <li class="navbar-brand active logout">
+            <ul class = "navbar-nav ">
+                <li class="navbar-brand active">
+                    <a class="nav-link" href="/profile" style="color: white;">PROFILE</a>
+                </li>
+                <li class="navbar-brand active ">
                     <a class="nav-link" href="/logout" style="color: white;">LOGOUT</a>
                 </li>
             </ul>
